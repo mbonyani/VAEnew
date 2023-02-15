@@ -1,0 +1,11 @@
+{"Parameters":
+    {
+        "Number of Samples": 100,
+        "Wavelength Proxy Threshold": 90,
+        "LII Proxy Threshold": 90,
+        "Original Data Path": "data-and-cleaning/cleandata.csv",
+        "Model Path": "all-results/1-20-22-models-info/a19lds19b0.007g1.0d1.0h13.pt",
+        "Path to R": "/usr/bin/R"
+    }
+}
+
