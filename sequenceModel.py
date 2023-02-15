@@ -82,8 +82,8 @@ class SequenceModel(Model):
     
     #decoder forward pass, takes a latent sample z and returns x^hat encoded sequences
     def decode(self, z,x):
-        dec_input = self.pos_encoder(x.float())[:, :-1]
-        dec_input = torch.nn.functional.pad(dec_input, (0, 0, 1, 0)) #padding data because of shift right in the transformer decoder;
+        dec_input = self.pos_encoder(x.float())
+        # dec_input = torch.nn.functional.pad(x.float(), (0, 0, 1, 0)) #padding data because of shift right in the transformer decoder;
                 
         hidden = self.dec_lin(z)
         

@@ -23,17 +23,17 @@ os.environ["CUDA_VISIBLE_DEVICES"]=""
 
 batchSize = 32
 
-numEpochs = 5
+numEpochs = 500
 alphas = [0.003]
 betas = [0.007]
 gammas = [2]
 deltas = [1]
 dropout =  [0]
-latentDims= [17]
-d_model = [64]
-num_heads = [8] #it must be devisible by d_model
+latentDims= [64]
+d_model = [4]
+num_heads = [2] #it must be devisible by d_model
 stack = [1]
-dim_feedforward=[2048]
+dim_feedforward=[32]
 trainTestSplit = (0.9, 0.1)
 weighted = True
 
