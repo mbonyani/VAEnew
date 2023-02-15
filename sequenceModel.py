@@ -72,22 +72,17 @@ class SequenceModel(Model):
     
     #endoder forward pass, takes one hot encoded sequences x and returns q(x|z)
     def encode(self, x):
-        print("self:::::::",x.shape)
         pose = self.pos_encoder(x.float())
-        print("PSE:::::::",pose.shape)
-        lin = self.oneHot2Dmodel(pose)
-        print("lin:::::::",lin.shape)
-        hidden = self.transformer_encoder(lin) #applying transformer encoder on the input which has positional encoding
-        print("PSE:::::::",hidden.shape)
+        # lin = self.oneHot2Dmodel(pose)
+        hidden = self.transformer_encoder(pose) #applying transformer encoder on the input which has positional encoding
         hidden = self.latent_linear(torch.flatten(hidden, 1))
-        print("hidden:::::::",hidden.shape)
         z_mean = self.latent_mean(hidden)
         z_log_std = self.latent_log_std(hidden)
         return torch.distributions.Normal(loc=z_mean, scale=torch.exp(z_log_std))
     
     #decoder forward pass, takes a latent sample z and returns x^hat encoded sequences
     def decode(self, z,x):
-        dec_input = (self.oneHot2Dmodel(self.pos_encoder(x.float())))[:, :-1]
+        dec_input = self.pos_encoder(x.float())[:, :-1]
         dec_input = torch.nn.functional.pad(dec_input, (0, 0, 1, 0)) #padding data because of shift right in the transformer decoder;
                 
         hidden = self.dec_lin(z)
