@@ -126,10 +126,13 @@ class SequenceTrainer(Trainer):
         if torch.cuda.is_available():
             inputs = inputs.cuda()
         outputs, latent_dist, prior, latent_sample, _ = self.model(inputs)
+        # print("outputsoutputsoutputs:",outputs[:,:-1,:].shape)
+        # print("inputs:",inputs[:,1:,:].shape)
+
         
         # compute accuracy
-        accuracy = self.mean_accuracy(weights=outputs,target=inputs)
-        r_loss = self.reconstruction_loss(inputs, outputs)
+        accuracy = self.mean_accuracy(weights=outputs[:,:-1,:],target=inputs[:,1:,:])
+        r_loss = self.reconstruction_loss(inputs[:,1:,:], outputs[:,:-1,:])
         kld_loss = self.compute_kld_loss(latent_dist, prior, beta=self.beta, c=self.capacity)
         loss = r_loss + kld_loss
 
@@ -286,7 +289,7 @@ class SequenceTrainer(Trainer):
             outputs, _, _, _, _ = self.model(inputs)
             # compute loss
             recons_loss = self.reconstruction_loss(
-                x=inputs, x_recons=outputs
+                x=inputs[:,1:-1,:], x_recons=outputs[:,:-1,:]
             )
             loss = recons_loss
             # compute mean loss and accuracy
@@ -310,9 +313,8 @@ class SequenceTrainer(Trainer):
     @staticmethod
     def mean_accuracy(weights, target):
         _,_,nn = weights.size()
-        weights = weights.view(-1,nn)
+        weights = weights.reshape(-1,nn)
         target = target.argmax(dim=2).view(-1)
-
         _, best = weights.max(1)
         correct = (best==target) #a list of booleans
         return torch.sum(correct.float())/target.size(0) 

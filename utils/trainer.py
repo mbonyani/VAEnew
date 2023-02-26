@@ -25,7 +25,9 @@ def process_data_file(path_to_dataset: str, sequence_length=10, prepended_name="
                                              to_numpy())  #One hot encodings in the form ['A', 'C', 'G', 'T']
     Wavelen = np.array(data.dataset['Wavelen'][:])
     LII = np.array(data.dataset['LII'][:])
-
+    SOS_token = np.ones((ohe_sequences.shape[0],1,4))*2
+    EOS_token = np.ones((ohe_sequences.shape[0],1,4))*3
+    ohe_sequences =  np.concatenate((SOS_token, ohe_sequences, EOS_token),axis=1)
     return {'Wavelen':Wavelen, "LII":LII,"ohe":ohe_sequences}
 def process_data_file2(path_to_dataset: str, sequence_length=10, prepended_name="processed", path_to_put=None, return_path=False):
     """Takes in a filepath to desired dataset and the sequence length of the sequences for that dataset,
@@ -37,7 +39,9 @@ def process_data_file2(path_to_dataset: str, sequence_length=10, prepended_name=
                                              to_numpy())  #One hot encodings in the form ['A', 'C', 'G', 'T']
     Wavelen = np.array(data.dataset['Wavelen'][valdict])
     LII = np.array(data.dataset['LII'][valdict])
-
+    SOS_token = np.ones((ohe_sequences.shape[0],1,4))*2
+    EOS_token = np.ones((ohe_sequences.shape[0],1,4))*3
+    ohe_sequences =  np.concatenate((SOS_token, ohe_sequences, EOS_token),axis=1)
     return {'Wavelen':Wavelen, "LII":LII,"ohe":ohe_sequences}
 
 class Trainer(ABC):
@@ -315,7 +319,7 @@ class Trainer(ABC):
         batch_size, seq_len, num_notes = weights.size()
         assert (batch_size == targets.size(0))
         assert (seq_len == targets.size(1))
-        weights = weights.view(-1, num_notes)
+        weights = weights.reshape(-1, num_notes)
         targets = targets.view(-1)
         loss = criteria(weights, targets)
         return loss
@@ -331,7 +335,7 @@ class Trainer(ABC):
         :return float, accuracy
         """
         _, _, num_notes = weights.size()
-        weights = weights.view(-1, num_notes)
+        weights = weights.reshape(-1, num_notes)
         targets = targets.view(-1)
 
         #https://pytorch.org/docs/stable/generated/torch.max.html#torch.max

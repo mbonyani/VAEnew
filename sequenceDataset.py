@@ -55,7 +55,12 @@ class SequenceDataset:
         perm = torch.randperm(nval)
         
         print(nval, split1,)
+
         
+        SOS_token = np.ones((nval,1,4))*2
+        EOS_token = np.ones((nval,1,4))*3
+        seqs =  np.concatenate((SOS_token, seqs, EOS_token),axis=1)
+
         train_ds = TensorDataset(
             torch.from_numpy(seqs[perm[:split1],:,:]),
             torch.from_numpy(attribs[perm[:split1],:]),
