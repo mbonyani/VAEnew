@@ -29,9 +29,9 @@ class SequenceDataset:
         self.noofbuckets = noofbuckets
         
     def transform_sequences(self,seqs):
-        enc = OneHotEncoder()
-        enc.fit(np.array(self.ALPHABET).reshape(-1,1))
-        return enc.transform(seqs.reshape(-1,1)).toarray().reshape(
+        self.enc = OneHotEncoder()
+        self.enc.fit(np.array(self.ALPHABET).reshape(-1,1))
+        return self.enc.transform(seqs.reshape(-1,1)).toarray().reshape(
             -1, self.seqlen, len(self.ALPHABET))
         
     # @staticmethod
