@@ -182,6 +182,7 @@ class SequenceModel(Model):
         emb = self.embedding(x.view(-1, x.size(2)).long())
         emb = emb.view(x.size(0),x.size(1),self.d_model)
         x = self.pos_encoder(emb)
+        
         with torch.no_grad():
             for i in range(num_layers):
                
