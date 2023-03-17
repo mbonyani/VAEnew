@@ -179,6 +179,8 @@ class SequenceModel(Model):
         d_model = self.transformer_encoder.layers[0].self_attn.embed_dim
         num_heads = self.transformer_encoder.layers[0].self_attn.num_heads
         norm_first = self.transformer_encoder.layers[0].norm_first
+        
+        ####
         emb = self.embedding(x.view(-1, x.size(2)).long())
         emb = emb.view(x.size(0),x.size(1),self.d_model)
         x = self.pos_encoder(emb)

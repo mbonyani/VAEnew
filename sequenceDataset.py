@@ -33,7 +33,7 @@ class SequenceDataset:
         self.enc.fit(np.array(self.ALPHABET).reshape(-1,1))
         return self.enc.transform(seqs.reshape(-1,1)).toarray().reshape(
             -1, self.seqlen, len(self.ALPHABET))
-        
+
     # @staticmethod
     # def cust_collate(batch):
     #     #print(list(batch))
